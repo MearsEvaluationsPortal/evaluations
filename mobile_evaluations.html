@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Mears Performance Evaluations Portal</title>
+  <!-- Google Fonts for premium modern typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Styling variables for rich premium dark-mode feel combined with print capabilities */
+    :root {
+      --bg-gradient-start: #0f172a;
+      --bg-gradient-end: #1e1b4b;
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --primary: #3b82f6;
+      --primary-glow: rgba(59, 130, 246, 0.3);
+      --accent: #6366f1;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --input-bg: rgba(15, 23, 42, 0.6);
+      --success: #10b981;
+      --danger: #ef4444;
+      --shading: rgba(59, 130, 246, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px 10px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    h1 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 22px;
+      letter-spacing: -0.5px;
+      background: linear-gradient(to right, #3b82f6, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Form styling and Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    .card-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 4px solid var(--primary);
+      padding-left: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--text);
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    /* Rating Scale Key Layout */
+    .rating-legend {
+      font-size: 12px;
+      line-height: 1.4;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .rating-legend-item {
+      padding: 6px 10px;
+      background: rgba(15, 23, 42, 0.4);
+      border-radius: 6px;
+      border-left: 3px solid var(--primary);
+    }
+
+    .rating-legend-item strong {
+      color: var(--primary);
+    }
+
+    /* Evaluation Grid Row Styles */
+    .eval-row {
+      background: rgba(15, 23, 42, 0.3);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .eval-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .eval-row-title {
+      font-weight: 700;
+      font-size: 14px;
+      color: #f1f5f9;
+      margin-bottom: 4px;
+    }
+
+    .eval-row-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      line-height: 1.35;
+    }
+
+    /* Centered Rating Selection Target Buttons */
+    .rating-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .rating-btn {
+      flex: 1;
+      aspect-ratio: 1;
+      max-height: 48px;
+      border-radius: 50%;
+      border: 1px solid var(--card-border);
+      background: rgba(15, 23, 42, 0.5);
+      color: var(--text-muted);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .rating-btn:hover {
+      border-color: var(--primary);
+      color: var(--text);
+    }
+
+    .rating-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+      box-shadow: 0 0 12px var(--primary);
+      transform: scale(1.1);
+    }
+
+    /* Shading style for Overall Rating card */
+    .shaded-card {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(99, 102, 241, 0.15));
+      border: 1px dashed var(--primary);
+    }
+
+    /* Voice / Microphone input controls */
+    .textarea-wrapper {
+      position: relative;
+    }
+
+    .textarea-wrapper textarea {
+      padding-right: 42px;
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .mic-btn {
+      position: absolute;
+      right: 8px;
+      top: 8px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .mic-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: var(--text);
+    }
+
+    .mic-btn.recording {
+      background: var(--danger);
+      color: white;
+      animation: pulse 1.2s infinite alternate;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+      100% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+    }
+
+    /* Signature Canvas Styles */
+    .signature-area {
+      position: relative;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      height: 120px;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+
+    canvas {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+
+    .sig-controls {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .sig-btn-clear {
+      font-size: 11px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 2px 5px;
+    }
+
+    .sig-btn-clear:hover {
+      color: var(--danger);
+    }
+
+    /* Control Buttons */
+    .action-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .action-btn:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+    }
+
+    /* Share Link Modal Dialog Styling */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: #1e293b;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      width: 90%;
+      max-width: 500px;
+      padding: 24px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.active .modal-card {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      font-family: 'Outfit', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: #f8fafc;
+      margin-bottom: 12px;
+    }
+
+    .modal-body {
+      color: #94a3b8;
+      font-size: 14px;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .link-copy-container {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .link-input {
+      flex: 1;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: #f8fafc;
+      font-size: 12px;
+      padding: 10px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      outline: none;
+    }
+
+    .copy-btn {
+      background: #3b82f6;
+      border: none;
+      color: white;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: #2563eb;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #94a3b8;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #f8fafc;
+    }
+
+    /* PRINT LAYOUT (triggers on Print/PDF export to render a clean white sheet matching mockup) */
+    @media print {
+      body {
+        background: white !important;
+        color: black !important;
+        padding: 0 !important;
+        font-size: 10pt !important;
+        line-height: 1.3 !important;
+      }
+
+      .container {
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      .card, .eval-row, .rating-legend-item {
+        background: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+        margin-bottom: 12px !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+      }
+
+      .card-title {
+        border-left: none !important;
+        padding-left: 0 !important;
+        color: black !important;
+        font-size: 11pt !important;
+        font-weight: bold !important;
+        margin-top: 15px !important;
+        margin-bottom: 5px !important;
+      }
+
+      h1 {
+        -webkit-text-fill-color: initial !important;
+        background: none !important;
+        color: black !important;
+        font-size: 15pt !important;
+        text-align: center !important;
+      }
+
+      .subtitle {
+        color: #475569 !important;
+        font-size: 10pt !important;
+        text-align: center !important;
+        margin-bottom: 15px !important;
+      }
+
+      /* Hide interactive buttons and controls */
+      .action-btn, .mic-btn, .sig-btn-clear, #roleSelect, label[for="roleSelect"], .rating-container, #collabBanner, #roleSelectorCard, .modal-overlay {
+        display: none !important;
+      }
+
+      /* Generate Print-Friendly Tables instead of raw buttons */
+      .print-table {
+        display: table !important;
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin-top: 5px !important;
+        margin-bottom: 10px !important;
+      }
+
+      .print-table th, .print-table td {
+        border-bottom: 1px solid #cbd5e1 !important;
+        padding: 6px 4px !important;
+        font-size: 9.5pt !important;
+      }
+
+      .print-table th {
+        border-bottom: 2px solid #94a3b8 !important;
+        font-weight: bold !important;
+        text-align: center !important;
+      }
+
+      .print-table th:first-child, .print-table td:first-child {
+        text-align: left !important;
+      }
+
+      .print-table td.rating-val {
+        text-align: center !important;
+        width: 45px !important;
+        font-family: Arial, sans-serif !important;
+        font-size: 11pt !important;
+      }
+
+      /* Shading for overall rating */
+      .print-shaded-tr {
+        background-color: #f1f5f9 !important;
+      }
+
+      /* Print rating scale matching mockup */
+      .print-rating-scale {
+        display: block !important;
+        font-size: 9.5pt !important;
+        line-height: 1.4 !important;
+        margin-bottom: 10px !important;
+      }
+
+      .print-rating-scale div {
+        margin-bottom: 2px !important;
+      }
+
+      /* Horizontal line separators */
+      hr {
+        display: block !important;
+        border: 0 !important;
+        border-top: 1px solid #cbd5e1 !important;
+        margin: 15px 0 10px 0 !important;
+      }
+
+      /* Employee details list layout */
+      .details-list {
+        display: block !important;
+      }
+
+      .details-list table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+      }
+
+      .details-list td {
+        padding: 4px 0 !important;
+        font-size: 9.5pt !important;
+      }
+
+      .details-list tr td:first-child {
+        font-weight: bold !important;
+        width: 140px !important;
+      }
+
+      .details-list tr td:last-child {
+        border-bottom: 1px solid #cbd5e1 !important;
+      }
+
+      /* Text comment blocks */
+      .print-textbox {
+        display: block !important;
+        border: 1px solid #cbd5e1 !important;
+        padding: 8px !important;
+        min-height: 70px !important;
+        font-size: 9.5pt !important;
+        white-space: pre-wrap !important;
+      }
+
+      /* Render actual signatures in print */
+      .print-sig-row {
+        display: table !important;
+        width: 100% !important;
+        margin-top: 10px !important;
+      }
+
+      .print-sig-cell {
+        display: table-cell !important;
+        width: 50% !important;
+        vertical-align: bottom !important;
+      }
+
+      .print-sig-image {
+        display: block !important;
+        max-height: 45px !important;
+        margin-bottom: 4px !important;
+      }
+
+      .print-sig-line {
+        border-top: 1px solid #cbd5e1 !important;
+        width: 80% !important;
+        font-weight: bold !important;
+        padding-top: 4px !important;
+        font-size: 9pt !important;
+      }
+
+      /* Hide web textareas and canvases */
+      textarea, .signature-area, .details-web-table {
+        display: none !important;
+      }
+    }
+
+    /* Default Web Hidden Print Blocks */
+    .print-table, .print-rating-scale, .print-textbox, .details-list, .print-sig-row {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  
+  <!-- COLLABORATIVE BANNER -->
+  <div id="collabBanner" style="display: none; background: linear-gradient(135deg, #4f46e5, #3b82f6); color: white; padding: 12px 16px; border-radius: 12px; margin-bottom: 20px; font-size: 13px; line-height: 1.4; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);">
+    <div style="font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+      <span>📝 Collaborative Mode</span>
+      <span style="font-size: 10px; background: rgba(255,255,255,0.25); padding: 2px 6px; border-radius: 12px; font-weight: normal;">PRE-FILLED EVALUATION</span>
+    </div>
+    Reviewing supervisor's ratings and comments. Please fill out the <strong>Employee Self-Reflection</strong> section, sign, and click <strong>Send Back to Supervisor (Text or Email)</strong>.
+    <button onclick="resetCollabMode()" style="background: rgba(255, 255, 255, 0.2); border: none; color: white; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; float: right; margin-top: -12px;">Reset Form</button>
+    <div style="clear: both;"></div>
+  </div>
+
+  <!-- SHARE MODAL -->
+  <div id="shareModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">Evaluation Handoff Link</div>
+      <div class="modal-body">
+        This link encodes all current scores and comments. Copy it to send via text message (SMS, Teams, Slack, etc.) or email it directly.
+      </div>
+      <div class="link-copy-container">
+        <input type="text" id="shareLinkInput" class="link-input" readonly>
+        <button onclick="copyShareLink()" class="copy-btn" id="copyBtn">Copy Link</button>
+      </div>
+      <div class="modal-actions">
+        <button onclick="emailShareLink()" class="copy-btn" style="background: #10b981; margin-right: auto;">Email Link</button>
+        <button onclick="closeModal()" class="btn-secondary">Close</button>
+      </div>
+    </div>
+  </div>
+  
+  <header>
+    <h1>MEARS PERFORMANCE EVALUATIONS PORTAL</h1>
+    <div class="subtitle" id="evaluationSubtitle">SELECT A ROLE BELOW TO START</div>
+  </header>
+
+  <!-- ROLE SELECTOR -->
+  <div class="card" id="roleSelectorCard">
+    <label for="roleSelect">Choose Role to Review:</label>
+    <select id="roleSelect" onchange="loadRole(this.value)">
+      <option value="">-- Select Role --</option>
+      <option value="Apprentice">Apprentice</option>
+      <option value="Journeyman">Journeyman</option>
+      <option value="Foreman">Foreman</option>
+      <option value="Superintendent">Superintendent</option>
+      <option value="Manager">Manager & Above</option>
+    </select>
+  </div>
+
+  <div id="evalForm" style="display: none;">
+    <!-- EMPLOYEE DETAILS CARD -->
+    <div class="card">
+      <div class="card-title">Employee Details</div>
+      
+      <!-- Interactive Web Table Form -->
+      <table class="details-web-table" style="width: 100%; border-collapse: collapse;">
+        <tr class="form-group">
+          <td><label for="empName">Employee Name:</label></td>
+          <td><input type="text" id="empName" placeholder="Enter name"></td>
+        </tr>
+        <tr class="form-group">
+          <td><label for="empId">Employee ID:</label></td>
+          <td><input type="text" id="empId" placeholder="Enter ID"></td>
+        </tr>
+        <tr class="form-group">
+          <td><label for="empEmail">Employee Email:</label></td>
+          <td><input type="email" id="empEmail" placeholder="employee@example.com"></td>
+        </tr>
+        <tr class="form-group">
+          <td><label for="empTitle">Job Title:</label></td>
+          <td><input type="text" id="empTitle" readonly></td>
+        </tr>
+        <tr class="form-group">
+          <td><label for="empDept">Department:</label></td>
+          <td><input type="text" id="empDept" placeholder="Enter department"></td>
+        </tr>
+        <tr class="form-group">
+          <td><label for="supName">Supervisor Name:</label></td>
+          <td><input type="text" id="supName" placeholder="Enter supervisor"></td>
+        </tr>
+        <tr class="form-group">
+          <td><label for="supEmail">Supervisor Email:</label></td>
+          <td><input type="email" id="supEmail" placeholder="supervisor@example.com"></td>
+        </tr>
+        <tr class="form-group">
+          <td><label for="empStartDate">Start Date:</label></td>
+          <td><input type="date" id="empStartDate"></td>
+        </tr>
+        <tr class="form-group">
+          <td><label>Evaluation Period:</label></td>
+          <td style="display: flex; gap: 15px; align-items: center; padding-top: 5px;">
+            <label style="display: inline-flex; align-items: center; font-weight: normal; margin-bottom: 0;">
+              <input type="radio" name="evalPeriod" value="30-Day" checked style="width: auto; margin-right: 4px;"> 30-Day
+            </label>
+            <label style="display: inline-flex; align-items: center; font-weight: normal; margin-bottom: 0;">
+              <input type="radio" name="evalPeriod" value="60-Day" style="width: auto; margin-right: 4px;"> 60-Day
+            </label>
+            <label style="display: inline-flex; align-items: center; font-weight: normal; margin-bottom: 0;">
+              <input type="radio" name="evalPeriod" value="90-Day" style="width: auto; margin-right: 4px;"> 90-Day
+            </label>
+          </td>
+        </tr>
+        <tr class="form-group">
+          <td><label for="evalDate">Evaluation Date:</label></td>
+          <td><input type="date" id="evalDate"></td>
+        </tr>
+      </table>
+
+      <!-- Print-Friendly Output (hidden on web, shown in PDF export) -->
+      <div class="details-list">
+        <table>
+          <tr><td>Employee Name:</td><td id="pEmpName"></td></tr>
+          <tr><td>Employee ID:</td><td id="pEmpId"></td></tr>
+          <tr><td>Employee Email:</td><td id="pEmpEmail"></td></tr>
+          <tr><td>Job Title:</td><td id="pEmpTitle"></td></tr>
+          <tr><td>Department:</td><td id="pEmpDept"></td></tr>
+          <tr><td>Supervisor Name:</td><td id="pSupName"></td></tr>
+          <tr><td>Supervisor Email:</td><td id="pSupEmail"></td></tr>
+          <tr><td>Start Date:</td><td id="pEmpStartDate"></td></tr>
+          <tr><td>Evaluation Period:</td><td id="pPeriod"></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- PURPOSE OF EVALUATION -->
+    <div class="card">
+      <div class="card-title">Purpose of Evaluation</div>
+      <p style="font-size: 13px; color: var(--text-muted); line-height: 1.45;">
+        This evaluation helps the employee and supervisor track progress, clarify expectations, and set goals during the first 90 days.
+      </p>
+    </div>
+
+    <!-- RATING SCALE DEFINITION -->
+    <div class="card">
+      <div class="card-title">Rating Scale</div>
+      
+      <!-- Web and Print layout -->
+      <div class="rating-legend">
+        <div class="rating-legend-item"><strong>1 - Unacceptable:</strong> Below standard. Major gaps in safety, quality, or attendance. Must improve immediately.</div>
+        <div class="rating-legend-item"><strong>2 - Needs Improvement:</strong> Inconsistent. Meets some expectations but needs training or coaching to meet full standards.</div>
+        <div class="rating-legend-item"><strong>3 - Effective:</strong> Performance consistently meets all expectations and requirements of the role.</div>
+        <div class="rating-legend-item"><strong>4 - Exceeds Expectations:</strong> Performance often goes beyond expectations and standards.</div>
+        <div class="rating-legend-item"><strong>5 - Outstanding:</strong> Performance is consistently exceptional across all areas.</div>
+      </div>
+    </div>
+
+    <!-- CORE VALUES CARD -->
+    <div class="card">
+      <div class="card-title">Core Values</div>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; font-style: italic;">
+        Tap the rating (1 to 5) for each value.
+      </p>
+      
+      <div id="coreValuesContainer">
+        <!-- Rendered dynamically by JavaScript -->
+      </div>
+
+      <!-- Print-Friendly Core Values Table -->
+      <table class="print-table" id="printCoreValuesTable">
+        <thead>
+          <tr>
+            <th class="first-col">Core Value</th>
+            <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>
+          </tr>
+        </thead>
+        <tbody id="printCoreValuesBody">
+          <!-- Filled by JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- FUNCTIONAL COMPETENCIES CARD -->
+    <div class="card">
+      <div class="card-title">Functional Competencies</div>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; font-style: italic;">
+        Tap the rating (1 to 5) for each competency.
+      </p>
+      
+      <div id="functionalContainer">
+        <!-- Rendered dynamically based on selected role -->
+      </div>
+
+      <!-- Print-Friendly Functional Competencies Table -->
+      <table class="print-table" id="printFuncTable">
+        <thead>
+          <tr>
+            <th class="first-col">Competency / Standard</th>
+            <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>
+          </tr>
+        </thead>
+        <tbody id="printFuncBody">
+          <!-- Filled by JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- OVERALL REVIEW RATING CARD (Shaded) -->
+    <div class="card shaded-card">
+      <div class="card-title" style="border-left-color: var(--primary);">Overall Rating</div>
+      
+      <div class="eval-row" style="background: transparent; border: none; padding: 0;">
+        <div class="eval-row-title">Overall Review Rating</div>
+        <div class="eval-row-desc">Based on core values and role-specific functional competencies.</div>
+        
+        <div class="rating-container">
+          <button class="rating-btn overall-btn" data-val="1" onclick="rateOverall(1)">1</button>
+          <button class="rating-btn overall-btn" data-val="2" onclick="rateOverall(2)">2</button>
+          <button class="rating-btn overall-btn" data-val="3" onclick="rateOverall(3)">3</button>
+          <button class="rating-btn overall-btn" data-val="4" onclick="rateOverall(4)">4</button>
+          <button class="rating-btn overall-btn" data-val="5" onclick="rateOverall(5)">5</button>
+        </div>
+      </div>
+
+      <!-- Print-Friendly Overall Rating Table -->
+      <table class="print-table">
+        <thead>
+          <tr class="print-shaded-tr">
+            <th class="first-col">Overall Performance Rating</th>
+            <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="print-shaded-tr">
+            <td>
+              <strong>Overall Review Rating</strong><br/>
+              <span style="font-size: 8pt; color: #4a5568; font-style: italic;">Based on core values and role competencies.</span>
+            </td>
+            <td class="rating-val" id="pOverall1">☐</td>
+            <td class="rating-val" id="pOverall2">☐</td>
+            <td class="rating-val" id="pOverall3">☐</td>
+            <td class="rating-val" id="pOverall4">☐</td>
+            <td class="rating-val" id="pOverall5">☐</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- COMMENTS CARD (with voice microphone inputs) -->
+    <div class="card">
+      <div class="card-title">Feedback Comments</div>
+      
+      <div class="form-group">
+        <label for="supComments">Supervisor Comments:</label>
+        <div class="textarea-wrapper">
+          <textarea id="supComments" placeholder="Describe strengths and key focus areas for improvement..."></textarea>
+          <button type="button" class="mic-btn" onclick="startSpeech('supComments', this)" title="Voice Dictation">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M5 3a3 3 0 0 1 6 0v5a3 3 0 0 1-6 0V3z"/>
+              <path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5z"/>
+            </svg>
+          </button>
+        </div>
+        <div class="print-textbox" id="pSupComments"></div>
+      </div>
+
+      <div class="form-group" style="margin-top: 15px;">
+        <label for="empComments">Employee Self-Reflection:</label>
+        <div class="textarea-wrapper">
+          <textarea id="empComments" placeholder="List accomplishments, challenges, and support requested..."></textarea>
+          <button type="button" class="mic-btn" onclick="startSpeech('empComments', this)" title="Voice Dictation">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M5 3a3 3 0 0 1 6 0v5a3 3 0 0 1-6 0V3z"/>
+              <path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5z"/>
+            </svg>
+          </button>
+        </div>
+        <div class="print-textbox" id="pEmpComments"></div>
+      </div>
+    </div>
+
+    <!-- SMART GOALS CARD -->
+    <div class="card">
+      <div class="card-title">SMART Goals (Next 30 Days)</div>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; font-style: italic;">
+        Detail 1 or 2 specific target objectives. Use microphone for quick dictation.
+      </p>
+
+      <div class="form-group">
+        <label for="goal1">SMART Goal 1:</label>
+        <div class="textarea-wrapper">
+          <textarea id="goal1" placeholder="Specify objective, actions, success metrics, and completion date..."></textarea>
+          <button type="button" class="mic-btn" onclick="startSpeech('goal1', this)" title="Voice Dictation">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M5 3a3 3 0 0 1 6 0v5a3 3 0 0 1-6 0V3z"/>
+              <path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5z"/>
+            </svg>
+          </button>
+        </div>
+        <div class="print-textbox" id="pGoal1"></div>
+      </div>
+
+      <div class="form-group" style="margin-top: 15px;">
+        <label for="goal2">SMART Goal 2:</label>
+        <div class="textarea-wrapper">
+          <textarea id="goal2" placeholder="Specify objective, actions, success metrics, and completion date..."></textarea>
+          <button type="button" class="mic-btn" onclick="startSpeech('goal2', this)" title="Voice Dictation">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M5 3a3 3 0 0 1 6 0v5a3 3 0 0 1-6 0V3z"/>
+              <path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5z"/>
+            </svg>
+          </button>
+        </div>
+        <div class="print-textbox" id="pGoal2"></div>
+      </div>
+    </div>
+
+    <!-- SIGNATURES CARD -->
+    <div class="card">
+      <div class="card-title">Signatures</div>
+      
+      <!-- Web signature drawing pads -->
+      <div class="form-group">
+        <label>Employee Signature:</label>
+        <div class="signature-area">
+          <canvas id="empSigCanvas"></canvas>
+        </div>
+        <div class="sig-controls">
+          <button type="button" class="sig-btn-clear" onclick="clearCanvas('empSigCanvas')">Clear Signature</button>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top: 15px;">
+        <label>Supervisor Signature:</label>
+        <div class="signature-area">
+          <canvas id="supSigCanvas"></canvas>
+        </div>
+        <div class="sig-controls">
+          <button type="button" class="sig-btn-clear" onclick="clearCanvas('supSigCanvas')">Clear Signature</button>
+        </div>
+      </div>
+
+      <!-- Print layout for signatures -->
+      <div class="print-sig-row">
+        <div class="print-sig-cell">
+          <img class="print-sig-image" id="pEmpSigImg" alt="">
+          <div class="print-sig-line">Employee Signature</div>
+          <div style="font-size: 8pt; color: #4a5568; font-style: italic;">Date: __________________</div>
+        </div>
+        <div class="print-sig-cell" style="padding-left: 20px;">
+          <img class="print-sig-image" id="pSupSigImg" alt="">
+          <div class="print-sig-line">Supervisor Signature</div>
+          <div style="font-size: 8pt; color: #4a5568; font-style: italic;">Date: __________________</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Guidance Tip -->
+    <div style="font-size: 11.5px; color: var(--text-muted); background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 10px; padding: 12px; margin-bottom: 12px; line-height: 1.45;">
+      💡 <strong>Review Methods:</strong><br/>
+      • <strong>Remote Flow:</strong> Rate on screen, click purple button to email/send link to employee. Employee fills self-reflection, signs on phone, and emails back.<br/>
+      • <strong>In-Person Flow:</strong> Review together on your screen. The employee types their self-reflection comments, both sign the screen, and click <strong>Generate PDF / Print</strong>.<br/>
+      • <strong>Paper / By-Hand:</strong> Leave form fields blank and click <strong>Generate PDF / Print</strong> to print a clean template for hand-written reviews.
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 40px;">
+      <!-- Main Action Button (context-aware: Send to Employee or Send back to Supervisor) -->
+      <button class="action-btn" id="mainActionBtn" onclick="handleMainAction()" style="background: linear-gradient(135deg, #6366f1, #4f46e5); box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.236-.236 1.178Z"/>
+        </svg>
+        <span id="mainActionText">Send to Employee for Self-Reflection</span>
+      </button>
+
+      <!-- EXPORT/PRINT BUTTON -->
+      <button class="action-btn" onclick="exportPDF()" style="background: linear-gradient(135deg, #475569, #334155); box-shadow: 0 4px 15px rgba(71, 85, 105, 0.3);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+          <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2V7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v4h-1v-1a2 2 0 0 0-2-2H5z"/>
+        </svg>
+        Generate PDF / Print Evaluation
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Core Values Data (Common)
+  const coreValues = [
+    { id: "cv_safety", name: "Safety", desc: "Wears PPE, reports hazards, works safely, and keeps a clean work area." },
+    { id: "cv_quality", name: "Quality", desc: "Follows specifications, does neat work, and avoids errors or rework." },
+    { id: "cv_ownership", name: "Ownership", desc: "Takes responsibility, works hard, and solves problems without being told." },
+    { id: "cv_integrity", name: "Integrity", desc: "Honest, reliable, and does the right thing." },
+    { id: "cv_service", name: "Service", desc: "Respectful and helpful to clients, crew, and the company." },
+    { id: "cv_team", name: "Team", desc: "Works well with others, supports the crew, and stays positive." }
+  ];
+
+  // Role Competencies Config
+  const roleCompetencies = {
+    "Apprentice": [
+      { id: "fc_learning", name: "Technical Learning Speed", desc: "Learns trade concepts quickly and applies training on the job." },
+      { id: "fc_tools", name: "Tool & Equipment Handling", desc: "Selects, uses, and maintains trade tools safely." },
+      { id: "fc_instructions", name: "Instruction Follow-Through", desc: "Listens and follows job instructions from Journeymen or Foremen without shortcuts." },
+      { id: "fc_production", name: "Level of Production & Effort", desc: "Works at a steady pace to meet daily crew goals." },
+      { id: "fc_housekeeping", name: "Jobsite Housekeeping", desc: "Keeps the work area neat, organized, and clean." },
+      { id: "fc_reliability", name: "Reliability & Attendance", desc: "Arrives on time, works dependably, and acts professionally." }
+    ],
+    "Journeyman": [
+      { id: "fc_mastery", name: "Trade Mastery & Compliance", desc: "Demonstrates high-quality trade skills. Works to code and specs." },
+      { id: "fc_problems", name: "Troubleshooting & Problem Solving", desc: "Finds and solves field issues independently." },
+      { id: "fc_prep", name: "Jobsite Prep & Material Management", desc: "Plans layout and gets materials ready in advance to avoid downtime." },
+      { id: "fc_mentoring", name: "Mentoring Apprentices", desc: "Teaches safety and trade skills to apprentices on the crew." },
+      { id: "fc_independence", name: "Task Independence", desc: "Completes tasks on time with minimal supervision." },
+      { id: "fc_reporting", name: "Clear Reporting & Coordination", desc: "Reports status, layout issues, and delays clearly to the Foreman." }
+    ],
+    "Foreman": [
+      { id: "fc_safety_ldr", name: "Crew Safety Leadership", desc: "Enforces safety rules, leads pre-task planning (PTP), and manages hazards." },
+      { id: "fc_qaqc", name: "Quality Control & Quality Assurance", desc: "Inspects crew work to prevent errors and ensure zero rework." },
+      { id: "fc_tracking", name: "Production Tracking & Daily Logs", desc: "Logs daily hours, progress, and quantities accurately. Sets daily crew goals." },
+      { id: "fc_logistics", name: "Material & Tool Logistics", desc: "Orders materials and tools in advance so the crew doesn't wait." },
+      { id: "fc_resolution", name: "Mentorship & Conflict Resolution", desc: "Coaches crew members, sets standards, and resolves crew conflicts directly." },
+      { id: "fc_comm", name: "Client & Project Communication", desc: "Communicates professionally with GC and inspectors. Reports status to Superintendents." }
+    ],
+    "Superintendent": [
+      { id: "fc_safety_ovr", name: "Multi-Crew Safety Oversight", desc: "Enforces safety standards across all crews. Audits safety reports." },
+      { id: "fc_milestones", name: "Project Schedule & Milestones", desc: "Keeps projects on schedule. Coordinates trade handoffs and resolves delays." },
+      { id: "fc_manpower", name: "Resource & Manpower Planning", desc: "Allocates crews, equipment, and resources across jobsites." },
+      { id: "fc_foreman_mgt", name: "Foreman Management & Mentoring", desc: "Coaches and manages Foremen to improve their leadership skills." },
+      { id: "fc_variance", name: "Cost & Budget Variance Control", desc: "Monitors project costs, tracks yields, and manages field change orders." },
+      { id: "fc_liaison", name: "Executive & GC Liaison", desc: "Acts as primary contact for GC managers and reports status/costs to executives." }
+    ],
+    "Manager": [
+      { id: "fc_alignment", name: "Strategic Plan Alignment", desc: "Aligns department work with company goals and tracks performance targets." },
+      { id: "fc_financial", name: "Financial & Budget Responsibility", desc: "Sets and manages budgets. Optimizes profit margins." },
+      { id: "fc_talent", name: "Talent Development & Coaching", desc: "Recruits, mentors, and reviews direct reports to build leadership." },
+      { id: "fc_decisions", name: "Advanced Decision Making", desc: "Resolves major disputes, evaluates risk, and handles client issues." },
+      { id: "fc_collab", name: "Cross-Functional Collaboration", desc: "Works across departments (HR, Safety, Finance) to keep projects moving." },
+      { id: "fc_risk", name: "Risk Management & Compliance", desc: "Identifies legal or contract risks and enforces protective standards." }
+    ]
+  };
+
+  // State
+  let selectedRole = "";
+  let ratings = {}; // Stores key: val (e.g. cv_safety: 4)
+  let overallRating = null;
+  let collabMode = false;
+
+  // (Initialization moved to window.onload at bottom)
+
+  function loadRole(role) {
+    selectedRole = role;
+    if (!role) {
+      document.getElementById('evalForm').style.display = 'none';
+      document.getElementById('evaluationSubtitle').textContent = "SELECT A ROLE BELOW TO START";
+      return;
+    }
+
+    document.getElementById('evalForm').style.display = 'block';
+    document.getElementById('empTitle').value = role;
+    document.getElementById('evaluationSubtitle').textContent = role.toUpperCase() + " EDITION";
+
+    ratings = {};
+    overallRating = null;
+    clearOverallBtns();
+
+    // 1. Render Core Values
+    const cvContainer = document.getElementById('coreValuesContainer');
+    cvContainer.innerHTML = '';
+    
+    const printCvBody = document.getElementById('printCoreValuesBody');
+    printCvBody.innerHTML = '';
+
+    coreValues.forEach(cv => {
+      // Web Row
+      const row = document.createElement('div');
+      row.className = 'eval-row';
+      row.innerHTML = `
+        <div class="eval-row-title">${cv.name}</div>
+        <div class="eval-row-desc">${cv.desc}</div>
+        <div class="rating-container">
+          ${[1,2,3,4,5].map(v => `<button class="rating-btn ${cv.id}-btn" data-val="${v}" onclick="rate('${cv.id}', ${v})">${v}</button>`).join('')}
+        </div>
+      `;
+      cvContainer.appendChild(row);
+
+      // Print Row
+      const pRow = document.createElement('tr');
+      pRow.innerHTML = `
+        <td><strong>${cv.name}</strong><br/><span style="font-size: 8pt; color: #4a5568; font-style: italic;">${cv.desc}</span></td>
+        ${[1,2,3,4,5].map(v => `<td class="rating-val" id="pVal-${cv.id}-${v}">☐</td>`).join('')}
+      `;
+      printCvBody.appendChild(pRow);
+    });
+
+    // 2. Render Functional Competencies
+    const funcContainer = document.getElementById('functionalContainer');
+    funcContainer.innerHTML = '';
+    
+    const printFuncBody = document.getElementById('printFuncBody');
+    printFuncBody.innerHTML = '';
+
+    const competencies = roleCompetencies[role] || [];
+    competencies.forEach(fc => {
+      // Web Row
+      const row = document.createElement('div');
+      row.className = 'eval-row';
+      row.innerHTML = `
+        <div class="eval-row-title">${fc.name}</div>
+        <div class="eval-row-desc">${fc.desc}</div>
+        <div class="rating-container">
+          ${[1,2,3,4,5].map(v => `<button class="rating-btn ${fc.id}-btn" data-val="${v}" onclick="rate('${fc.id}', ${v})">${v}</button>`).join('')}
+        </div>
+      `;
+      funcContainer.appendChild(row);
+
+      // Print Row
+      const pRow = document.createElement('tr');
+      pRow.innerHTML = `
+        <td><strong>${fc.name}</strong><br/><span style="font-size: 8pt; color: #4a5568; font-style: italic;">${fc.desc}</span></td>
+        ${[1,2,3,4,5].map(v => `<td class="rating-val" id="pVal-${fc.id}-${v}">☐</td>`).join('')}
+      `;
+      printFuncBody.appendChild(pRow);
+    });
+
+    // Setup signature canvases
+    initCanvas('empSigCanvas');
+    initCanvas('supSigCanvas');
+  }
+
+  function rate(key, val) {
+    ratings[key] = val;
+    
+    // Update Web Buttons UI
+    const btns = document.querySelectorAll(`.${key}-btn`);
+    btns.forEach(btn => {
+      if (parseInt(btn.getAttribute('data-val')) === val) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    // Update Print Checkboxes UI
+    for (let v = 1; v <= 5; v++) {
+      const pTd = document.getElementById(`pVal-${key}-${v}`);
+      if (pTd) {
+        pTd.innerHTML = (v === val) ? '☒' : '☐';
+      }
+    }
+  }
+
+  function rateOverall(val) {
+    overallRating = val;
+
+    // Update Web UI
+    const btns = document.querySelectorAll(`.overall-btn`);
+    btns.forEach(btn => {
+      if (parseInt(btn.getAttribute('data-val')) === val) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    // Update Print UI
+    for (let v = 1; v <= 5; v++) {
+      const pTd = document.getElementById(`pOverall${v}`);
+      if (pTd) {
+        pTd.innerHTML = (v === val) ? '☒' : '☐';
+      }
+    }
+  }
+
+  function clearOverallBtns() {
+    const btns = document.querySelectorAll(`.overall-btn`);
+    btns.forEach(btn => btn.classList.remove('active'));
+    for (let v = 1; v <= 5; v++) {
+      const pTd = document.getElementById(`pOverall${v}`);
+      if (pTd) pTd.innerHTML = '☐';
+    }
+  }
+
+  // Voice Speech Recognition API (with microphone pulsing states)
+  function startSpeech(targetId, btn) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Voice input is not supported on this browser. Please type directly.");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = function() {
+      btn.classList.add('recording');
+    };
+
+    recognition.onspeechend = function() {
+      recognition.stop();
+      btn.classList.remove('recording');
+    };
+
+    recognition.onresult = function(event) {
+      const transcript = event.results[0][0].transcript;
+      const txtArea = document.getElementById(targetId);
+      if (txtArea.value) {
+        txtArea.value += ' ' + transcript;
+      } else {
+        txtArea.value = transcript;
+      }
+      // Force change trigger
+      txtArea.dispatchEvent(new Event('input'));
+    };
+
+    recognition.onerror = function(event) {
+      console.error(event.error);
+      btn.classList.remove('recording');
+    };
+
+    recognition.start();
+  }
+
+  // Canvas digital signing logic (touch & mouse support with stroke points serialization)
+  const canvasesState = {};
+  
+  function initCanvas(canvasId) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+
+    // Resize canvas bounding rect
+    const rect = canvas.parentNode.getBoundingClientRect();
+    canvas.width = rect.width * 2;
+    canvas.height = rect.height * 2;
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+
+    const ctx = canvas.getContext('2d');
+    ctx.scale(2, 2);
+    ctx.strokeStyle = '#3b82f6';
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = 'round';
+
+    let drawing = false;
+    let lastX = 0;
+    let lastY = 0;
+
+    canvasesState[canvasId] = { 
+      canvas, 
+      ctx, 
+      drawn: false, 
+      strokes: [], 
+      currentStroke: [],
+      width: rect.width,
+      height: rect.height
+    };
+
+    function getCoords(e) {
+      const r = canvas.getBoundingClientRect();
+      let clientX = e.clientX;
+      let clientY = e.clientY;
+      if (e.touches && e.touches.length > 0) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      }
+      return {
+        x: clientX - r.left,
+        y: clientY - r.top
+      };
+    }
+
+    function startDraw(e) {
+      drawing = true;
+      const coords = getCoords(e);
+      lastX = coords.x;
+      lastY = coords.y;
+      canvasesState[canvasId].currentStroke = [{ x: coords.x, y: coords.y }];
+      e.preventDefault();
+    }
+
+    function draw(e) {
+      if (!drawing) return;
+      const coords = getCoords(e);
+      
+      const current = canvasesState[canvasId].currentStroke;
+      const lastPt = current[current.length - 1];
+      const dist = Math.sqrt(Math.pow(coords.x - lastPt.x, 2) + Math.pow(coords.y - lastPt.y, 2));
+
+      // Only record point if moved at least 2 pixels to keep stroke payload small
+      if (dist > 2) {
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(coords.x, coords.y);
+        ctx.stroke();
+        lastX = coords.x;
+        lastY = coords.y;
+        current.push({ x: coords.x, y: coords.y });
+        canvasesState[canvasId].drawn = true;
+      }
+      e.preventDefault();
+    }
+
+    function stopDraw() {
+      if (drawing) {
+        drawing = false;
+        const current = canvasesState[canvasId].currentStroke;
+        if (current && current.length > 0) {
+          canvasesState[canvasId].strokes.push(current);
+        }
+      }
+    }
+
+    // Touch support
+    canvas.addEventListener('touchstart', startDraw, { passive: false });
+    canvas.addEventListener('touchmove', draw, { passive: false });
+    canvas.addEventListener('touchend', stopDraw);
+
+    // Mouse support
+    canvas.addEventListener('mousedown', startDraw);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDraw);
+    canvas.addEventListener('mouseleave', stopDraw);
+  }
+
+  function clearCanvas(canvasId) {
+    const state = canvasesState[canvasId];
+    if (!state) return;
+    state.ctx.clearRect(0, 0, state.canvas.width, state.canvas.height);
+    state.drawn = false;
+    state.strokes = [];
+    state.currentStroke = [];
+  }
+
+  // Compress strokes to a percentage-based 0-99 coordinate string (very compact)
+  function getCompressStrokes(canvasId) {
+    const state = canvasesState[canvasId];
+    if (!state || !state.strokes || state.strokes.length === 0) return '';
+    const w = state.width || 300;
+    const h = state.height || 120;
+    return state.strokes.map(stroke => {
+      return stroke.map(pt => {
+        const x = Math.min(99, Math.max(0, Math.round((pt.x / w) * 99)));
+        const y = Math.min(99, Math.max(0, Math.round((pt.y / h) * 99)));
+        return x.toString().padStart(2, '0') + y.toString().padStart(2, '0');
+      }).join('');
+    }).join('|');
+  }
+
+  // Redraw strokes from the compressed string
+  function drawCompressedStrokes(canvasId, strokesStr) {
+    const state = canvasesState[canvasId];
+    if (!state || !strokesStr) return;
+    const w = state.width || 300;
+    const h = state.height || 120;
+    state.strokes = [];
+    state.ctx.clearRect(0, 0, state.canvas.width, state.canvas.height);
+    
+    strokesStr.split('|').forEach(strokeStr => {
+      const stroke = [];
+      state.ctx.beginPath();
+      for (let i = 0; i < strokeStr.length; i += 4) {
+        const xPct = parseInt(strokeStr.substr(i, 2)) / 99;
+        const yPct = parseInt(strokeStr.substr(i + 2, 2)) / 99;
+        const x = xPct * w;
+        const y = yPct * h;
+        stroke.push({ x, y });
+        if (i === 0) {
+          state.ctx.moveTo(x, y);
+        } else {
+          state.ctx.lineTo(x, y);
+        }
+      }
+      state.ctx.stroke();
+      state.strokes.push(stroke);
+    });
+    state.drawn = true;
+  }
+
+  // Generate Print Output & Print Preview
+  function exportPDF() {
+    // Fill textual values
+    document.getElementById('pEmpName').textContent = document.getElementById('empName').value || '__________________';
+    document.getElementById('pEmpId').textContent = document.getElementById('empId').value || '__________________';
+    if (document.getElementById('pEmpEmail')) {
+      document.getElementById('pEmpEmail').textContent = document.getElementById('empEmail').value || '__________________';
+    }
+    document.getElementById('pEmpTitle').textContent = document.getElementById('empTitle').value;
+    document.getElementById('pEmpDept').textContent = document.getElementById('empDept').value || '__________________';
+    document.getElementById('pSupName').textContent = document.getElementById('supName').value || '__________________';
+    document.getElementById('pSupEmail').textContent = document.getElementById('supEmail').value || '__________________';
+    document.getElementById('pEmpStartDate').textContent = document.getElementById('empStartDate').value || '__________________';
+    
+    const checkedPeriod = document.querySelector('input[name="evalPeriod"]:checked');
+    const pDate = document.getElementById('evalDate').value;
+    document.getElementById('pPeriod').textContent = (checkedPeriod ? checkedPeriod.value : '') + ' / Date: ' + (pDate || '__________________');
+
+    // Fill Comments & Goals
+    document.getElementById('pSupComments').textContent = document.getElementById('supComments').value || 'No comments written.';
+    document.getElementById('pEmpComments').textContent = document.getElementById('empComments').value || 'No reflection comments written.';
+    document.getElementById('pGoal1').textContent = document.getElementById('goal1').value || 'No goals specified.';
+    document.getElementById('pGoal2').textContent = document.getElementById('goal2').value || 'No goals specified.';
+
+    // Export Canvas signatures as inline base64 images for printing
+    if (canvasesState['empSigCanvas'] && canvasesState['empSigCanvas'].drawn) {
+      document.getElementById('pEmpSigImg').src = canvasesState['empSigCanvas'].canvas.toDataURL();
+      document.getElementById('pEmpSigImg').style.display = 'block';
+    } else {
+      document.getElementById('pEmpSigImg').style.display = 'none';
+    }
+
+    if (canvasesState['supSigCanvas'] && canvasesState['supSigCanvas'].drawn) {
+      document.getElementById('pSupSigImg').src = canvasesState['supSigCanvas'].canvas.toDataURL();
+      document.getElementById('pSupSigImg').style.display = 'block';
+    } else {
+      document.getElementById('pSupSigImg').style.display = 'none';
+    }
+
+    // Trigger Print/Export
+    window.print();
+  }
+
+  // Construct and send email with evaluation results prefilled
+  function emailEvaluation() {
+    const empName = document.getElementById('empName').value || 'Employee';
+    const empId = document.getElementById('empId').value || 'N/A';
+    const empTitle = document.getElementById('empTitle').value || 'Role';
+    const empDept = document.getElementById('empDept').value || 'N/A';
+    const supName = document.getElementById('supName').value || 'Supervisor';
+    const supEmail = document.getElementById('supEmail').value || '';
+    const empStartDate = document.getElementById('empStartDate').value || 'N/A';
+    const empEmail = document.getElementById('empEmail') ? document.getElementById('empEmail').value : 'N/A';
+    
+    const checkedPeriod = document.querySelector('input[name="evalPeriod"]:checked');
+    const period = checkedPeriod ? checkedPeriod.value : 'Review Period';
+    const evalDate = document.getElementById('evalDate').value || new Date().toLocaleDateString();
+
+    const supComments = document.getElementById('supComments').value || 'No comments.';
+    const empComments = document.getElementById('empComments').value || 'No reflection comments.';
+    const goal1 = document.getElementById('goal1').value || 'None.';
+    const goal2 = document.getElementById('goal2').value || 'None.';
+
+    // Construct rating summary
+    let ratingsText = "\nCORE VALUES RATINGS:\n";
+    coreValues.forEach(cv => {
+      const val = ratings[cv.id] || 'Not Rated';
+      ratingsText += `- ${cv.name}: ${val} / 5\n`;
+    });
+
+    ratingsText += "\nFUNCTIONAL COMPETENCIES RATINGS:\n";
+    const competencies = roleCompetencies[selectedRole] || [];
+    if (competencies.length > 0) {
+      competencies.forEach(fc => {
+        const val = ratings[fc.id] || 'Not Rated';
+        ratingsText += `- ${fc.name}: ${val} / 5\n`;
+      });
+    } else {
+      ratingsText += "Role not selected or no competencies loaded.\n";
+    }
+
+    ratingsText += `\nOVERALL RATING: ${overallRating || 'Not Rated'} / 5\n`;
+
+    // Generate the return link encoding both supervisor AND employee answers!
+    const stateStr = serializeFormState();
+    const baseUrl = window.location.href.split('?')[0];
+    const returnUrl = `${baseUrl}?state=${stateStr}`;
+
+    // Construct email components
+    const subject = encodeURIComponent(`Completed Mears Performance Review - ${empName} (${empTitle})`);
+    const body = encodeURIComponent(
+      `MEARS PERFORMANCE EVALUATION (COMPLETED)\n` +
+      `-----------------------------------\n` +
+      `Employee Name: ${empName}\n` +
+      `Employee ID: ${empId}\n` +
+      `Employee Email: ${empEmail}\n` +
+      `Job Title: ${empTitle}\n` +
+      `Department: ${empDept}\n` +
+      `Supervisor Name: ${supName}\n` +
+      `Supervisor Email: ${supEmail}\n` +
+      `Start Date: ${empStartDate}\n` +
+      `Evaluation Period: ${period}\n` +
+      `Date of Review: ${evalDate}\n` +
+      `-----------------------------------\n` +
+      ratingsText +
+      `\n-----------------------------------\n` +
+      `SUPERVISOR COMMENTS:\n${supComments}\n\n` +
+      `EMPLOYEE SELF-REFLECTION:\n${empComments}\n\n` +
+      `SMART GOAL 1:\n${goal1}\n\n` +
+      `SMART GOAL 2:\n${goal2}\n\n` +
+      `-----------------------------------\n` +
+      `VIEW OR PRINT COMPLETED FORM LINK:\n` +
+      `${returnUrl}\n\n` +
+      `-----------------------------------\n` +
+      `Submitted via 30-60-90 Mobile Evaluations Web App.`
+    );
+
+    window.location.href = `mailto:${supEmail}?subject=${subject}&body=${body}`;
+  }
+
+  // State Serialization
+  function serializeFormState() {
+    const checkedPeriod = document.querySelector('input[name="evalPeriod"]:checked');
+    const state = {
+      r: selectedRole,
+      n: document.getElementById('empName').value,
+      i: document.getElementById('empId').value,
+      e: document.getElementById('empEmail') ? document.getElementById('empEmail').value : '',
+      d: document.getElementById('empDept').value,
+      sn: document.getElementById('supName').value,
+      se: document.getElementById('supEmail').value,
+      sd: document.getElementById('empStartDate').value,
+      p: checkedPeriod ? checkedPeriod.value : '30-Day',
+      dt: document.getElementById('evalDate').value,
+      rt: ratings,
+      o: overallRating,
+      sc: document.getElementById('supComments').value,
+      ec: document.getElementById('empComments').value,
+      g1: document.getElementById('goal1').value,
+      g2: document.getElementById('goal2').value,
+      es: getCompressStrokes('empSigCanvas'),
+      ss: getCompressStrokes('supSigCanvas')
+    };
+    return btoa(unescape(encodeURIComponent(JSON.stringify(state))));
+  }
+
+  // State Deserialization
+  function deserializeFormState(base64) {
+    try {
+      const jsonStr = decodeURIComponent(escape(atob(base64)));
+      return JSON.parse(jsonStr);
+    } catch(e) {
+      console.error("Error decoding state", e);
+      return null;
+    }
+  }
+
+  // Modal handlers
+  function closeModal() {
+    document.getElementById('shareModal').classList.remove('active');
+  }
+
+  function copyShareLink() {
+    const input = document.getElementById('shareLinkInput');
+    input.select();
+    input.setSelectionRange(0, 99999); // For mobile devices
+    try {
+      document.execCommand('copy');
+      const copyBtn = document.getElementById('copyBtn');
+      copyBtn.textContent = "Copied!";
+      copyBtn.style.background = "#10b981";
+      setTimeout(() => {
+        copyBtn.textContent = "Copy Link";
+        copyBtn.style.background = "#3b82f6";
+      }, 2000);
+    } catch (err) {
+      alert("Failed to copy link. Please manually copy the text in the box.");
+    }
+  }
+
+  function emailShareLink() {
+    const empEmail = document.getElementById('empEmail') ? document.getElementById('empEmail').value : '';
+    const empName = document.getElementById('empName').value || 'Employee';
+    const link = document.getElementById('shareLinkInput').value;
+    const subject = encodeURIComponent(`Mears Review Self-Reflection Request - ${empName}`);
+    const body = encodeURIComponent(
+      `Hi ${empName},\n\n` +
+      `Your supervisor has pre-filled your Mears Performance Evaluation. ` +
+      `Please open the link below on your phone or computer to review the scores/comments, add your Self-Reflection, sign, and send it back:\n\n` +
+      `${link}\n\n` +
+      `Thanks!`
+    );
+    window.location.href = `mailto:${empEmail}?subject=${subject}&body=${body}`;
+  }
+
+  function handleMainAction() {
+    if (collabMode) {
+      sendToSupervisor();
+    } else {
+      sendToEmployee();
+    }
+  }
+
+  function sendToEmployee() {
+    if (!selectedRole) {
+      alert("Please select a role and fill out the ratings first.");
+      return;
+    }
+    const stateStr = serializeFormState();
+    const baseUrl = window.location.href.split('?')[0];
+    const shareUrl = `${baseUrl}?state=${stateStr}`;
+    
+    document.getElementById('modalHeader').textContent = "Send to Employee";
+    document.getElementById('modalBody').textContent = "Choose how to send this evaluation to the employee. You can copy the link to text it via SMS, WhatsApp, Teams, or click Email Link to draft an email.";
+    
+    const emailBtn = document.getElementById('emailShareBtn');
+    if (emailBtn) {
+      emailBtn.textContent = "Email Link";
+      emailBtn.setAttribute('onclick', 'emailShareLink()');
+    }
+    
+    document.getElementById('shareLinkInput').value = shareUrl;
+    document.getElementById('shareModal').classList.add('active');
+  }
+
+  function sendToSupervisor() {
+    const stateStr = serializeFormState();
+    const baseUrl = window.location.href.split('?')[0];
+    const shareUrl = `${baseUrl}?state=${stateStr}`;
+    
+    document.getElementById('modalHeader').textContent = "Send Back to Supervisor";
+    document.getElementById('modalBody').textContent = "Choose how to send the updated evaluation back to your supervisor. You can copy the link to text it via SMS/iMessage, or click Email to Supervisor to send it via email.";
+    
+    const emailBtn = document.getElementById('emailShareBtn');
+    if (emailBtn) {
+      emailBtn.textContent = "Email to Supervisor";
+      emailBtn.setAttribute('onclick', 'emailEvaluation()');
+    }
+    
+    document.getElementById('shareLinkInput').value = shareUrl;
+    document.getElementById('shareModal').classList.add('active');
+  }
+
+  function resetCollabMode() {
+    if (confirm("Are you sure you want to reset this evaluation and start fresh?")) {
+      window.location.href = window.location.href.split('?')[0];
+    }
+  }
+
+  // On Page Load
+  window.onload = function() {
+    // 1. Initialize evaluation date to today
+    document.getElementById('evalDate').valueAsDate = new Date();
+
+    // 2. Check for state in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const stateParam = urlParams.get('state');
+    if (stateParam) {
+      const state = deserializeFormState(stateParam);
+      if (state && state.r) {
+        collabMode = true;
+        // Load the role specific questions
+        loadRole(state.r);
+
+        // Fill employee details
+        document.getElementById('empName').value = state.n || '';
+        document.getElementById('empId').value = state.i || '';
+        if (document.getElementById('empEmail')) {
+          document.getElementById('empEmail').value = state.e || '';
+        }
+        document.getElementById('empDept').value = state.d || '';
+        document.getElementById('supName').value = state.sn || '';
+        document.getElementById('supEmail').value = state.se || '';
+        document.getElementById('empStartDate').value = state.sd || '';
+        
+        // Fill radio period
+        const periodRadios = document.getElementsByName('evalPeriod');
+        for (let i = 0; i < periodRadios.length; i++) {
+          if (periodRadios[i].value === state.p) {
+            periodRadios[i].checked = true;
+          }
+        }
+        document.getElementById('evalDate').value = state.dt || '';
+
+        // Fill ratings
+        if (state.rt) {
+          for (const [key, val] of Object.entries(state.rt)) {
+            rate(key, val);
+          }
+        }
+
+        // Fill overall rating
+        if (state.o) {
+          rateOverall(state.o);
+        }
+
+        // Fill text comments
+        document.getElementById('supComments').value = state.sc || '';
+        document.getElementById('empComments').value = state.ec || '';
+        document.getElementById('goal1').value = state.g1 || '';
+        document.getElementById('goal2').value = state.g2 || '';
+
+        // Draw signatures if they exist in state
+        if (state.es) {
+          drawCompressedStrokes('empSigCanvas', state.es);
+        }
+        if (state.ss) {
+          drawCompressedStrokes('supSigCanvas', state.ss);
+        }
+
+        // Show collaborative mode banner
+        document.getElementById('collabBanner').style.display = 'block';
+
+        // Hide role selector card to focus employee on this specific review
+        document.getElementById('roleSelectorCard').style.display = 'none';
+        
+        // Change the title subtitle to make it clear this is collaborative
+        document.getElementById('evaluationSubtitle').textContent = `${state.r.toUpperCase()} EVALUATION - REVIEW MODE`;
+
+        // Customize the action button text for sharing back-and-forth
+        const mainActionBtn = document.getElementById('mainActionBtn');
+        const mainActionText = document.getElementById('mainActionText');
+        if (mainActionBtn && mainActionText) {
+          mainActionText.textContent = "Send Back to Supervisor (Text or Email)";
+          mainActionBtn.style.background = "linear-gradient(135deg, #10b981, #059669)";
+          mainActionBtn.style.boxShadow = "0 4px 15px rgba(16, 185, 129, 0.4)";
+          mainActionBtn.querySelector('svg').innerHTML = `
+            <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+          `;
+        }
+      }
+    }
+  }
+</script>
+
+</body>
+</html>
