@@ -1321,9 +1321,21 @@
       printFuncBody.appendChild(pRow);
     });
 
-    // Setup signature canvases
-    initCanvas('empSigCanvas');
-    initCanvas('supSigCanvas');
+    // Setup signature canvases safely
+    try {
+      initCanvas('empSigCanvas');
+      initCanvas('supSigCanvas');
+    } catch(e) {
+      console.warn("Signature pads initializing on delay...", e);
+      setTimeout(() => {
+        try {
+          initCanvas('empSigCanvas');
+          initCanvas('supSigCanvas');
+        } catch(err) {
+          console.error("Canvas init deferred:", err);
+        }
+      }, 300);
+    }
   }
 
   function rate(key, val) {
@@ -1716,7 +1728,7 @@
     const returnUrl = `${baseUrl}?state=${encodeURIComponent(stateStr)}`;
 
     // Construct email components
-    const subject = encodeURIComponent(`const subject = encodeURIComponent(`Completed Mears Review - ${empName} - ${period}`); - ${empName} (${empTitle})`);
+    const subject = encodeURIComponent(`Completed Mears Performance Review - ${empName} (${empTitle})`);
     const body = encodeURIComponent(
       `MEARS PERFORMANCE EVALUATION (COMPLETED)\n` +
       `-----------------------------------\n` +
