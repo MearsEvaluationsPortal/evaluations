@@ -65,6 +65,10 @@
       width: auto;
       margin: 0 auto 12px auto;
       display: block;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 8px 16px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
     h1 {
@@ -136,6 +140,14 @@
       font-family: inherit;
       outline: none;
       transition: all 0.2s ease;
+    }
+
+    input[type="checkbox"], input[type="radio"] {
+      width: auto !important;
+      height: auto !important;
+      margin: 0;
+      padding: 0;
+      cursor: pointer;
     }
 
     input:focus, select:focus, textarea:focus {
@@ -785,6 +797,7 @@
       </div>
       <div class="modal-actions">
         <button onclick="emailShareLink()" class="copy-btn" id="emailShareBtn" style="background: #10b981; margin-right: auto;">Email Link</button>
+        <button onclick="openShareLink()" class="copy-btn" id="openShareBtn" style="background: #6366f1; margin-right: 8px;">Open Link</button>
         <button onclick="closeModal()" class="btn-secondary">Close</button>
       </div>
     </div>
@@ -1596,7 +1609,11 @@
   }
 
   function syncTypedSignature(prefix) {
-    // Left empty for now
+    const textVal = document.getElementById(prefix + 'Text').value;
+    const printedEl = document.getElementById('p' + prefix.charAt(0).toUpperCase() + prefix.slice(1) + 'Typed');
+    if (printedEl) {
+      printedEl.textContent = textVal;
+    }
   }
 
   function clearCanvas(canvasId) {
@@ -1759,7 +1776,7 @@
     // Generate the return link encoding both supervisor AND employee answers!
     const stateStr = serializeFormState();
     const baseUrl = window.location.href.split('?')[0];
-    const returnUrl = `${baseUrl}?state=${stateStr}`;
+    const returnUrl = `${baseUrl}?state=${encodeURIComponent(stateStr)}`;
 
     // Construct email components
     const subject = encodeURIComponent(`Completed Mears Performance Review - ${empName} (${empTitle})`);
@@ -1785,7 +1802,7 @@
       `SUPERVISOR SIGNATURE: ${supSigTextVal}\n` +
       `-----------------------------------\n` +
       `VIEW OR PRINT COMPLETED FORM LINK:\n` +
-      `${returnUrl}\n\n` +
+      `<${returnUrl}>\n\n` +
       `-----------------------------------\n` +
       `Submitted via 30-60-90 Mobile Evaluations Web App.`
     );
@@ -1827,6 +1844,7 @@
   // State Deserialization
   function deserializeFormState(base64) {
     try {
+      base64 = base64.replace(/ /g, '+');
       const jsonStr = decodeURIComponent(escape(atob(base64)));
       return JSON.parse(jsonStr);
     } catch(e) {
@@ -1858,6 +1876,13 @@
     }
   }
 
+  function openShareLink() {
+    const link = document.getElementById('shareLinkInput').value;
+    if (link) {
+      window.open(link, '_blank');
+    }
+  }
+
   function emailShareLink() {
     const empEmail = document.getElementById('empEmail') ? document.getElementById('empEmail').value : '';
     const empName = document.getElementById('empName').value || 'Employee';
@@ -1867,7 +1892,7 @@
       `Hi ${empName},\n\n` +
       `Your supervisor has pre-filled your Mears Performance Evaluation. ` +
       `Please open the link below on your phone or computer to review the scores/comments, add your Self-Reflection, sign, and send it back:\n\n` +
-      `${link}\n\n` +
+      `<${link}>\n\n` +
       `Thanks!`
     );
     window.location.href = `mailto:${empEmail}?subject=${subject}&body=${body}`;
@@ -1888,7 +1913,7 @@
     }
     const stateStr = serializeFormState();
     const baseUrl = window.location.href.split('?')[0];
-    const shareUrl = `${baseUrl}?state=${stateStr}`;
+    const shareUrl = `${baseUrl}?state=${encodeURIComponent(stateStr)}`;
     
     document.getElementById('modalHeader').textContent = "Send to Employee";
     document.getElementById('modalBody').textContent = "Choose how to send this evaluation to the employee. You can copy the link to text it via SMS, WhatsApp, Teams, or click Email Link to draft an email.";
@@ -1906,7 +1931,7 @@
   function sendToSupervisor() {
     const stateStr = serializeFormState();
     const baseUrl = window.location.href.split('?')[0];
-    const shareUrl = `${baseUrl}?state=${stateStr}`;
+    const shareUrl = `${baseUrl}?state=${encodeURIComponent(stateStr)}`;
     
     document.getElementById('modalHeader').textContent = "Send Back to Supervisor";
     document.getElementById('modalBody').textContent = "Choose how to send the updated evaluation back to your supervisor. You can copy the link to text it via SMS/iMessage, or click Email to Supervisor to send it via email.";
