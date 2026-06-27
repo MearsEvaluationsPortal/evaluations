@@ -1718,7 +1718,7 @@
     coreValues.forEach(cv => {
       const val = ratings[cv.id] || 'Not Rated';
       const comment = itemComments[cv.id] ? ` - Comment: ${itemComments[cv.id]}` : '';
-      ratingsText += `- ${cv.name}: ${val} / 5${comment}\n`;
+      ratingsText += `- ${cv.name}: ${val} / 4${comment}\n`;
     });
 
     ratingsText += "\nFUNCTIONAL COMPETENCIES RATINGS:\n";
@@ -1727,13 +1727,13 @@
       competencies.forEach(fc => {
         const val = ratings[fc.id] || 'Not Rated';
         const comment = itemComments[fc.id] ? ` - Comment: ${itemComments[fc.id]}` : '';
-        ratingsText += `- ${fc.name}: ${val} / 5${comment}\n`;
+        ratingsText += `- ${fc.name}: ${val} / 4${comment}\n`;
       });
     } else {
       ratingsText += "Role not selected or no competencies loaded.\n";
     }
 
-    ratingsText += `\nOVERALL RATING: ${overallRating || 'Not Rated'} / 5\n`;
+    ratingsText += `\nOVERALL RATING: ${overallRating || 'Not Rated'} / 4\n`;
 
     // Generate the return link encoding both supervisor AND employee answers!
     const stateStr = serializeFormState();
