@@ -1671,13 +1671,11 @@
     const goal1 = document.getElementById('goal1').value || 'None.';
     const goal2 = document.getElementById('goal2').value || 'None.';
 
-    const empSigTextVal = document.getElementById('empSigModeType').classList.contains('active') ? 
-      `(Typed: ${document.getElementById('empSigText').value})` : 
-      (canvasesState['empSigCanvas'] && canvasesState['empSigCanvas'].drawn ? '(Digitally Signed)' : '(Not Signed)');
+    const empSigTextVal = document.getElementById('empSigText').value ? 
+      `(Typed: ${document.getElementById('empSigText').value})` : '(Not Signed)';
 
-    const supSigTextVal = document.getElementById('supSigModeType').classList.contains('active') ? 
-      `(Typed: ${document.getElementById('supSigText').value})` : 
-      (canvasesState['supSigCanvas'] && canvasesState['supSigCanvas'].drawn ? '(Digitally Signed)' : '(Not Signed)');
+    const supSigTextVal = document.getElementById('supSigText').value ? 
+      `(Typed: ${document.getElementById('supSigText').value})` : '(Not Signed)';
 
     // Construct rating summary
     let ratingsText = "\nCORE VALUES RATINGS:\n";
@@ -1730,7 +1728,7 @@
       `SUPERVISOR SIGNATURE: ${supSigTextVal}\n` +
       `-----------------------------------\n` +
       `VIEW OR PRINT COMPLETED FORM LINK:\n\n` +
-      `${returnUrl}\n\n` +
+      `<${returnUrl}>\n\n` +
       `-----------------------------------\n` +
       `Submitted via 30-60-90 Mobile Evaluations Web App.`
     );
@@ -1817,7 +1815,7 @@
       `Your supervisor has pre-filled your Mears Performance Evaluation. ` +
       `Please open the link below on your phone or computer to review the scores/comments, add your Self-Reflection, sign, and send it back:\n\n` +
       `Evaluation Link:\n\n` +
-      `${link}\n\n` +
+      `<${link}>\n\n` +
       `Thanks!`
     );
     window.location.href = `mailto:${empEmail}?subject=${subject}&body=${body}`;

@@ -1488,89 +1488,7 @@
     const ctx = canvas.getContext('2d');
     ctx.scale(2, 2);
     ctx.strokeStyle = '#3b82f6';
-    ctx.lineWidth = 2.5;
-    ctx.lineCap = 'round';
-
-    let drawing = false;
-    let lastX = 0;
-    let lastY = 0;
-
-    canvasesState[canvasId] = { 
-      canvas, 
-      ctx, 
-      drawn: false, 
-      strokes: [], 
-      currentStroke: [],
-      width: rect.width,
-      height: rect.height
-    };
-
-    function getCoords(e) {
-      const r = canvas.getBoundingClientRect();
-      let clientX = e.clientX;
-      let clientY = e.clientY;
-      if (e.touches && e.touches.length > 0) {
-        clientX = e.touches[0].clientX;
-        clientY = e.touches[0].clientY;
-      }
-      return {
-        x: clientX - r.left,
-        y: clientY - r.top
-      };
-    }
-
-    function startDraw(e) {
-      if (canvas.classList.contains('disabled') || canvas.disabled) return;
-      drawing = true;
-      const coords = getCoords(e);
-      lastX = coords.x;
-      lastY = coords.y;
-      canvasesState[canvasId].currentStroke = [{ x: coords.x, y: coords.y }];
-      e.preventDefault();
-    }
-
-    function draw(e) {
-      if (!drawing) return;
-      const coords = getCoords(e);
-      
-      const current = canvasesState[canvasId].currentStroke;
-      const lastPt = current[current.length - 1];
-      const dist = Math.sqrt(Math.pow(coords.x - lastPt.x, 2) + Math.pow(coords.y - lastPt.y, 2));
-
-      // Only record point if moved at least 2 pixels to keep stroke payload small
-      if (dist > 2) {
-        ctx.beginPath();
-        ctx.moveTo(lastX, lastY);
-        ctx.lineTo(coords.x, coords.y);
-        ctx.stroke();
-        lastX = coords.x;
-        lastY = coords.y;
-        current.push({ x: coords.x, y: coords.y });
-        canvasesState[canvasId].drawn = true;
-      }
-      e.preventDefault();
-    }
-
-    function stopDraw() {
-      if (drawing) {
-        drawing = false;
-        const current = canvasesState[canvasId].currentStroke;
-        if (current && current.length > 0) {
-          canvasesState[canvasId].strokes.push(current);
-        }
-      }
-    }
-
-    // Touch support
-    canvas.addEventListener('touchstart', startDraw, { passive: false });
-    canvas.addEventListener('touchmove', draw, { passive: false });
-    canvas.addEventListener('touchend', stopDraw);
-
-    // Mouse support
-    canvas.addEventListener('mousedown', startDraw);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseup', stopDraw);
-    canvas.addEventListener('mouseleave', stopDraw);
+    // Replaced drawing functions with empty to maintain signature code structure without canvas
   }
 
   function setSigMode(prefix, mode) {
@@ -1605,57 +1523,17 @@
   }
 
   function clearCanvas(canvasId) {
-    const state = canvasesState[canvasId];
-    if (!state) return;
-    if (state.canvas.classList.contains('disabled') || state.canvas.disabled) return;
-    state.ctx.clearRect(0, 0, state.canvas.width, state.canvas.height);
-    state.drawn = false;
-    state.strokes = [];
-    state.currentStroke = [];
+    // No-op for removed drawing functionality
   }
 
   // Compress strokes to a percentage-based 0-99 coordinate string (very compact)
   function getCompressStrokes(canvasId) {
-    const state = canvasesState[canvasId];
-    if (!state || !state.strokes || state.strokes.length === 0) return '';
-    const w = state.width || 300;
-    const h = state.height || 120;
-    return state.strokes.map(stroke => {
-      return stroke.map(pt => {
-        const x = Math.min(99, Math.max(0, Math.round((pt.x / w) * 99)));
-        const y = Math.min(99, Math.max(0, Math.round((pt.y / h) * 99)));
-        return x.toString().padStart(2, '0') + y.toString().padStart(2, '0');
-      }).join('');
-    }).join('|');
+    return '';
   }
 
   // Redraw strokes from the compressed string
   function drawCompressedStrokes(canvasId, strokesStr) {
-    const state = canvasesState[canvasId];
-    if (!state || !strokesStr) return;
-    const w = state.width || 300;
-    const h = state.height || 120;
-    state.strokes = [];
-    state.ctx.clearRect(0, 0, state.canvas.width, state.canvas.height);
-    
-    strokesStr.split('|').forEach(strokeStr => {
-      const stroke = [];
-      state.ctx.beginPath();
-      for (let i = 0; i < strokeStr.length; i += 4) {
-        const xPct = parseInt(strokeStr.substr(i, 2)) / 99;
-        const yPct = parseInt(strokeStr.substr(i + 2, 2)) / 99;
-        const x = xPct * w;
-        const y = yPct * h;
-        stroke.push({ x, y });
-        if (i === 0) {
-          state.ctx.moveTo(x, y);
-        } else {
-          state.ctx.lineTo(x, y);
-        }
-      }
-      state.ctx.stroke();
-      state.strokes.push(stroke);
-    });
+    // No-op for removed drawing functionality
     state.drawn = true;
   }
 
@@ -1720,13 +1598,11 @@
     const goal1 = document.getElementById('goal1').value || 'None.';
     const goal2 = document.getElementById('goal2').value || 'None.';
 
-    const empSigTextVal = document.getElementById('empSigModeType').classList.contains('active') ? 
-      `(Typed: ${document.getElementById('empSigText').value})` : 
-      (canvasesState['empSigCanvas'] && canvasesState['empSigCanvas'].drawn ? '(Digitally Signed)' : '(Not Signed)');
+    const empSigTextVal = document.getElementById('empSigText').value ? 
+      `(Typed: ${document.getElementById('empSigText').value})` : '(Not Signed)';
 
-    const supSigTextVal = document.getElementById('supSigModeType').classList.contains('active') ? 
-      `(Typed: ${document.getElementById('supSigText').value})` : 
-      (canvasesState['supSigCanvas'] && canvasesState['supSigCanvas'].drawn ? '(Digitally Signed)' : '(Not Signed)');
+    const supSigTextVal = document.getElementById('supSigText').value ? 
+      `(Typed: ${document.getElementById('supSigText').value})` : '(Not Signed)';
 
     // Construct rating summary
     let ratingsText = "\nCORE VALUES RATINGS:\n";
@@ -1779,7 +1655,7 @@
       `SUPERVISOR SIGNATURE: ${supSigTextVal}\n` +
       `-----------------------------------\n` +
       `VIEW OR PRINT COMPLETED FORM LINK:\n\n` +
-      `${returnUrl}\n\n` +
+      `<${returnUrl}>\n\n` +
       `-----------------------------------\n` +
       `Submitted via 30-60-90 Mobile Evaluations Web App.`
     );
@@ -1805,11 +1681,7 @@
       ec: document.getElementById('empComments').value,
       g1: document.getElementById('goal1').value,
       g2: document.getElementById('goal2').value,
-      es: getCompressStrokes('empSigCanvas'),
-      ss: getCompressStrokes('supSigCanvas'),
-      esm: document.getElementById('empSigModeType').classList.contains('active') ? 'type' : 'draw',
       est: document.getElementById('empSigText').value,
-      ssm: document.getElementById('supSigModeType').classList.contains('active') ? 'type' : 'draw',
       sst: document.getElementById('supSigText').value,
       ic: itemComments,
       ea: document.getElementById('empAck').checked ? 1 : 0,
@@ -1870,7 +1742,7 @@
       `Your supervisor has pre-filled your Mears Performance Evaluation. ` +
       `Please open the link below on your phone or computer to review the scores/comments, add your Self-Reflection, sign, and send it back:\n\n` +
       `Evaluation Link:\n\n` +
-      `${link}\n\n` +
+      `<${link}>\n\n` +
       `Thanks!`
     );
     window.location.href = `mailto:${empEmail}?subject=${subject}&body=${body}`;
